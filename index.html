@@ -1,55 +1,2350 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#07090f">
-  <meta name="description" content="Shakil — developer portfolio">
-  <title>Shakil | Developer Portfolio</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="/app.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>—͞𝐒ʜᴀᴋɪʟ 𝐃ᴠᴇ !¡🎀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<!-- Three.js এবং GSAP লাইব্রেরি যোগ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+}
+body{
+    background:#000;
+    color:white;
+    overflow-x:hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* ⭐ BLUE GLOW RING ANIMATION ⭐ */
+@keyframes glowPulse {
+0% { box-shadow: 0 0 15px var(--glow-color,#00eaff), 0 0 30px var(--glow-color,#00eaff); border-color: var(--glow-color,#00eaff); }
+50% { box-shadow: 0 0 35px var(--glow-color,#00eaff), 0 0 60px var(--glow-color,#00eaff); border-color: var(--glow-color,#7ff5ff); }
+100% { box-shadow: 0 0 15px var(--glow-color,#00eaff), 0 0 30px var(--glow-color,#00eaff); border-color: var(--glow-color,#00eaff); }
+}
+
+/* ------------ নতুন লোডিং স্টাইল শুরু ------------ */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1000003;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#loading-overlay .loader {
+    position: relative;
+    width: min(120px, 30vw);
+    height: min(120px, 30vw);
+    max-width: 150px;
+    max-height: 150px;
+}
+
+#loading-overlay .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: min(3px, 0.5vw) solid transparent;
+    border-top: min(3px, 0.5vw) solid #00eaff;
+    filter: drop-shadow(0 0 min(10px, 2vw) #00eaff);
+    animation: rotate 2s linear infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+#loading-overlay .ring:nth-child(1) {
+    width: 100%;
+    height: 100%;
+}
+
+#loading-overlay .ring:nth-child(2) {
+    width: 90%;
+    height: 90%;
+    border-top-color: #ff00ff;
+    animation-duration: 1.5s;
+    animation-direction: reverse;
+}
+
+#loading-overlay .ring:nth-child(3) {
+    width: 80%;
+    height: 80%;
+    border-top-color: #00ffaa;
+    animation-duration: 1s;
+}
+
+#loading-overlay .image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(70px, 20vw);
+    height: min(70px, 20vw);
+    border-radius: 50%;
+    object-fit: cover;
+    border: min(2px, 0.4vw) solid #00eaff;
+    box-shadow: 0 0 min(20px, 4vw) rgba(0, 234, 255, 0.5);
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* মোবাইল অপ্টিমাইজেশন */
+@media (max-width: 768px) {
+    #loading-overlay .loader {
+        width: 100px;
+        height: 100px;
+    }
+    #loading-overlay .image {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    #loading-overlay .loader {
+        width: 80px;
+        height: 80px;
+    }
+    #loading-overlay .image {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 320px) {
+    #loading-overlay .loader {
+        width: 70px;
+        height: 70px;
+    }
+    #loading-overlay .image {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Portrait mode optimization */
+@media (orientation: portrait) {
+    #loading-overlay .loader {
+        width: min(100px, 25vh);
+        height: min(100px, 25vh);
+    }
+    #loading-overlay .image {
+        width: min(60px, 15vh);
+        height: min(60px, 15vh);
+    }
+}
+
+/* Landscape mode optimization */
+@media (orientation: landscape) and (max-height: 600px) {
+    #loading-overlay .loader {
+        width: 80px;
+        height: 80px;
+    }
+    #loading-overlay .image {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #loading-overlay .ring {
+        border-width: 2px;
+        border-top-width: 2px;
+    }
+}
+/* ------------ নতুন লোডিং স্টাইল শেষ ------------ */
+
+/* টাচ অ্যানিমেশন কন্টেইনার */
+#touch-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999999;
+}
+.touch-circle {
+    position: absolute;
+    background-color: var(--glow-color,#00eaff);
+    border-radius: 50%;
+    opacity: 0.8;
+    transform: scale(0);
+    animation: touch-appear 0.3s forwards;
+    pointer-events: none;
+}
+@keyframes touch-appear {
+    to {
+        transform: scale(1);
+    }
+}
+.touch-particle {
+    position: absolute;
+    background-color: var(--glow-color,#00eaff);
+    border-radius: 50%;
+    opacity: 1;
+    transform: scale(1);
+    animation: touch-disperse 0.5s forwards;
+    pointer-events: none;
+}
+@keyframes touch-disperse {
+    to {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* হ্যামবার্গার মেনু */
+.hamburger-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 30px;
+    height: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    z-index: 1000001;
+}
+.hamburger-menu span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: #ecf0f1;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 5px #ecf0f1;
+}
+
+/* সাইড নেভিগেশন */
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 250px;
+    height: 100%;
+    background: rgba(44, 62, 80, 0.95);
+    padding-top: 80px;
+    transition: left 0.3s ease-in-out;
+    z-index: 1000000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+}
+.nav-menu.active {
+    left: 0;
+}
+.nav-menu a {
+    display: block;
+    color: #ecf0f1;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s, text-shadow 0.3s;
+    border-left: 5px solid transparent;
+}
+.nav-menu a:hover {
+    background-color: #34495e;
+    border-left-color: var(--glow-color,#00eaff);
+    text-shadow: 0 0 5px var(--glow-color,#00eaff);
+}
+
+/* থ্রি.জেএস ব্যাকগ্রাউন্ড ক্যানভাস */
+#bg-canvas { 
+    position: fixed; 
+    inset: 0; 
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ------------ আগের HTML থেকে নেওয়া স্টাইল শেষ ------------ */
+
+/* OVERLAYS, MENU, SIDEBAR */
+.overlay{
+position:fixed;
+width:100%;
+height:100%;
+background:#0009;
+top:0;
+left:0;
+display:none;
+z-index:1000000;
+}
+.overlay.show{ display:block; }
+
+/* HEADER */
+.header{
+text-align:center;
+padding:80px 20px 30px;
+}
+.header img{
+width:155px;
+height:155px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid var(--glow-color,#00eaff);
+animation: glowPulse 2.2s infinite ease-in-out;
+}
+.header h1{
+margin-top:15px;
+font-size:30px;
+text-shadow:0 0 12px cyan;
+}
+.header p{ opacity:.85; }
+
+/* CARDS */
+.card{
+width:90%;
+margin:20px auto;
+padding:20px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+border-radius:16px;
+box-shadow: 0 0 15px var(--glow-color,#00eaff);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+cursor:pointer;
+position: relative;
+z-index: 9;
+}
+.card h2{text-align:center; margin-bottom:10px;}
+.tag{
+display:inline-block;
+background:#162036;
+padding:8px 14px;
+margin:5px;
+border-radius:20px;
+font-size:14px;
+}
+
+/* ---------------- 3D EFFECT ON PRESS ---------------- */
+.card:active{
+transform: translateY(8px) rotateX(3deg) rotateY(3deg);
+box-shadow: 0 0 35px var(--glow-color,#00eaff);
+}
+
+/* ⭐⭐⭐ FIXED FLOAT BUTTON LAYOUT (EVERY DEVICE SAME) ⭐⭐⭐ */
+.float-btns{
+position:fixed;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:90000;
+right:10px;
+bottom:10px;
+align-items:flex-end;
+}
+.float-btns div{
+width:48.5px;
+height:48.5px;
+background: rgba(0,0,0,0.08);
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:50%;
+font-size:24px;
+color:#fff;
+border:none;
+box-shadow: 0 6px 14px rgba(0,0,0,0.45), 0 0 16px var(--glow-color,#00eaff);
+transition: transform 0.12s cubic-bezier(.2,.8,.2,1), box-shadow 0.12s ease, background 0.12s ease;
+cursor:pointer;
+touch-action: manipulation;
+-webkit-tap-highlight-color: transparent;
+}
+.float-btns div img{
+width:47px;
+height:47px;
+border-radius:50%;
+display:block;
+pointer-events:none;
+}
+
+/* press/down */
+.float-btns div:active{
+transform: translateY(8px) scale(0.985);
+box-shadow: 0 4px 10px rgba(0,0,0,0.35), 0 0 6px rgba(0,0,0,0.0);
+}
+
+/* hover */
+.float-btns div:hover{
+transform: translateY(-4px) scale(1.02);
+box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px var(--glow-color,#00eaff);
+}
+
+/* COLOR BOX */
+#colorBox{
+position: absolute;
+top: 18px;
+right: 20px;
+display: flex;
+gap: 12px;
+z-index: 2000;
+}
+.bg-btn{
+width:32px;
+height:32px;
+border-radius:50%;
+border:2px solid white;
+cursor:pointer;
+box-shadow:0 0 10px white;
+}
+
+/* ============ VIDEO VIEWER STYLES ============ */
+.video-section {
+  width: 100%;
+  background: transparent;
+  padding: 0px 0;
+  position: relative;
+  z-index: 10000;
+}
+
+.video-section-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: cyan;
+  text-shadow: 0 0 10px cyan;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.mobile-wrapper {  
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+  background: transparent;
+  overflow: hidden;
+  border-radius: 30px;
+  padding: 20px;
+}  
+
+.container {  
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 0px;
+  background: transparent;
+  transition: padding-top 0.3s ease;
+  overflow-y: auto;
+  max-height: 100%;
+}  
+
+.container.playing {  
+  padding-top: 20px;
+}  
+
+.video-item {  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 65px;
+  cursor: pointer;
+}  
+
+.video-title {  
+  font-size: 20px;
+  color: cyan;
+  text-shadow: 0 0 8px cyan;
+  text-align: center;
+  margin-bottom: 12px;
+  background: rgba(0, 0, 0, 1.5);
+  padding: 8px 15px;
+  border-radius: 8px;
+}  
+
+/* ============ থাম্বনেইলে গ্লো এফেক্ট কমিয়ে দিয়েছি ============ */
+.thumbnail-wrapper {  
+  width: 100%;
+  height: 180px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 5px var(--glow-color,#00eaff);
+  position: relative;
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}  
+
+/* থাম্বনেইলে চাপ দিলে ডেবে যাওয়ার ইফেক্ট */
+.thumbnail-wrapper:active {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(-20px);
+  box-shadow: 0 0 3px var(--glow-color,#00eaff);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.thumbnail {  
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}  
+
+.thumbnail-wrapper:hover .thumbnail {
+  transform: scale(1.05);
+}
+
+.play-icon {  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: var(--glow-color,#00eaff);
+  box-shadow: 0 0 5px var(--glow-color,#00eaff);
+  z-index: 10;
+  transform: translate(-50%, -50%) perspective(1000px) translateZ(20px);
+}  
+
+.video-wrapper {  
+  width: 90%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 10px var(--glow-color,#00eaff);
+  display: none;
+  margin-bottom: 10px;
+  aspect-ratio: 16 / 9;
+}  
+
+video {  
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  outline: none;
+}  
+
+.controls {  
+  display: none;
+  gap: 12px;
+  padding: 0 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin-top: 10px;
+}  
+
+.controls button {  
+  background: var(--glow-color,#00eaff);
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}  
+
+.info {  
+  font-size: 12px;
+  opacity: 0.7;
+  text-align: center;
+  padding: 0 15px;
+  display: none;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  margin-top: 10px;
+  padding: 8px;
+  color: var(--glow-color,#00eaff);
+}  
+
+.back-button {  
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--glow-color,#00eaff);
+  border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    z-index: 20;
+    box-shadow: 0 0 5px var(--glow-color,#00eaff);
+}
+
+.toast {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%) translateY(100%);
+color: white;
+background: var(--glow-color,#4CAF50);
+padding: 12px 24px;
+border-radius: 8px;
+font-size: 16px;
+font-weight: bold;
+box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+z-index: 10000;
+opacity: 0;
+transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.toast.show {  
+  transform: translateX(-50%) translateY(0);  
+  opacity: 1;  
+}
+
+/* ==================== তৃতীয় HTML এর স্টাইল ==================== */
+.contact-section {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 20px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  position: relative;
+  z-index: 20;
+}
+
+.contact-card {
+ max-width: 640px;
+  width: 100%;
+  background: #f0f0f3;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px 10px rgba(-191, 206, 230, 0.3), 0 0 50px 20px rgba(135, 206, 235, 0.2);
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+}
+.contact-card textarea, .contact-card input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: #e0e5ec;
+  box-shadow: inset 4px 4px 6px rgba(135, 206, 235, 0.3), inset -4px -4px 6px rgba(255,255,255,0.6);
+  transition: all 0.2s ease;
+  color: #333;
+}
+.contact-card h2 {
+  color: #000000;
+}
+
+.contact-card .title {
+  color: #000000;
+}
+
+.contact-card * {
+  color: #000000;
+}
+
+.contact-card textarea:focus, .contact-card input:focus {
+  box-shadow: inset 2px 2px 4px rgba(192,192,192,0.6), inset -2px -2px 4px rgba(255,255,255,0.8);
+}
+
+.contact-card button {
+  background: #0b79ff;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 4px 4px 8px rgba(11,121,255,0.4), -4px -4px 8px rgba(255,255,255,0.3);
+  transition: all 0.2s ease;
+}
+
+.contact-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 12px rgba(11,121,255,0.6), -6px -6px 12px rgba(255,255,255,0.5);
+}
+
+.contact-note {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+#contact-inbox-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.contact-msg {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin: 2px 0;
+  display: inline-block;
+  word-break: break-word;
+  position: relative;
+}
+
+.contact-msg.user {
+  background: #dbe7ff;
+  color: #0b3d91;
+  margin-left: auto;
+  text-align: right;
+  box-shadow: 4px 4px 8px rgba(192,192,192,0.3), -4px -4px 8px rgba(255,255,255,0.5);
+}
+
+.contact-msg.admin {
+  background: #f0f0f3;
+  color: #333;
+  margin-right: auto;
+  text-align: left;
+  box-shadow: 4px 4px 8px rgba(150,180,255,0.4), -4px -4px 8px rgba(255,255,255,0.5);
+}
+
+.contact-reply-container {
+  display: flex;
+  gap: 6px;
+}
+
+.contact-reply-container input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #e0e5ec;
+  box-shadow: inset 2px 2px 4px rgba(192,192,192,0.4), inset -2px -2px 4px rgba(255,255,255,0.6);
+}
+
+.contact-reply-container button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.contact-loader-container {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0 0 0;
+}
+
+.contact-loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0b79ff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: contact-spin 1s linear infinite;
+}
+
+@keyframes contact-spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+/* ==================== NEW SECTIONS ==================== */
+.info-section {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 1000002;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.info-section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin: 50px 0 30px;
+  color: var(--glow-color,#00eaff);
+  text-shadow: 0 0 15px var(--glow-color,#00eaff);
+}
+
+.info-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 0 20px var(--glow-color,#00eaff);
+  font-size: 18px;
+  line-height: 1.6;
+  color: white;
+}
+
+.info-section .back-button {
+  display: block;
+  top: 96px;
+}
+
+/* Typing effect */
+.typing-text {
+  border-right: 2px solid var(--glow-color,#00eaff);
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--glow-color,#00eaff); }
+}
+
+/* Device Info Styles */
+.device-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.device-info-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 0 10px var(--glow-color,#00eaff);
+  text-align: center;
+}
+
+.device-info-item h3 {
+  color: var(--glow-color,#00eaff);
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.device-info-item p {
+  font-size: 14px;
+}
+
+/* ==================== SHAKIL DEV PROFILE THEME ==================== */
+:root {
+  --glow-color: #00eaff;
+  --glow-rgb: 0, 234, 255;
+}
+
+html { scroll-behavior: smooth; }
+
+.header h1 {
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-size: clamp(28px, 7vw, 52px);
+  font-weight: 900;
+  letter-spacing: .025em;
+  background: linear-gradient(to bottom right, #fff, var(--glow-color, #00eaff), #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  transition: background .25s ease;
+}
+
+.header p {
+  font-family: 'Orbitron', Arial, sans-serif;
+  font-size: clamp(10px, 3vw, 13px);
+  font-weight: 600;
+  letter-spacing: .045em;
+  color: #fff;
+  text-shadow: 0 0 6px var(--glow-color, #00eaff), 0 0 14px rgba(var(--glow-rgb, 0, 234, 255), .4);
+  transition: text-shadow .25s ease;
+}
+
+.card {
+  width: min(90%, 520px);
+  margin: 14px auto;
+  padding: 17px;
+  border: 1px solid var(--glow-color, #00eaff);
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(6, 22, 34, .94), rgba(2, 8, 16, .94));
+  box-shadow: 0 0 13px var(--glow-color, #00eaff), inset 0 0 18px rgba(var(--glow-rgb, 0, 234, 255), .06);
+}
+
+.card h2 { color: var(--glow-color, #00eaff); }
+
+.tag {
+  background: rgba(10, 24, 37, .95);
+  border: 1px solid rgba(var(--glow-rgb, 0, 234, 255), .34);
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+#colorBox {
+  position: fixed;
+  top: 15px;
+  right: 14px;
+  gap: 10px;
+}
+
+.bg-btn {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 0 8px currentColor;
+}
+
+.section-title {
+  display: block;
+  margin: 0 0 18px;
+  text-align: center;
+  color: var(--glow-color, #00eaff);
+  font-size: 26px;
+  text-shadow: 0 0 10px var(--glow-color, #00eaff);
+}
+
+.video-section-title {
+  color: var(--glow-color, #00eaff);
+  text-shadow: 0 0 9px var(--glow-color, #00eaff);
+}
+
+.video-title {
+  color: #fff;
+  background: transparent;
+  padding: 0;
+  font-weight: 400;
+  text-shadow: 0 0 8px var(--glow-color, #00eaff);
+  transition: text-shadow .25s ease;
+}
+
+.projects-section,
+.channel-section,
+.shakil-bot-section {
+  width: min(90%, 520px);
+  margin: 26px auto;
+  position: relative;
+  z-index: 20;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 10px;
+}
+
+.project-card {
+  position: relative;
+  min-height: 112px;
+  padding: 13px 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-align: center;
+  text-decoration: none;
+  color: #f2fbff;
+  border: 1px solid rgba(var(--glow-rgb, 0, 234, 255), .34);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(10, 25, 39, .97), rgba(3, 10, 19, .97));
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .3), 0 0 8px rgba(var(--glow-rgb, 0, 234, 255), .12);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--glow-color, #00eaff);
+  box-shadow: 0 0 15px var(--glow-color, #00eaff);
+}
+
+.project-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(var(--glow-rgb, 0, 234, 255), .12);
+  font-size: 21px;
+}
+
+.project-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2px 6px;
+  color: #031019;
+  border-radius: 20px;
+  background: var(--glow-color, #00eaff);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.project-name { font-size: 12px; font-weight: 700; }
+.project-description { color: #9db1c2; font-size: 10px; line-height: 1.35; }
+.project-empty { grid-column: 1 / -1; color: #91a5b5; text-align: center; font-size: 13px; padding: 10px; }
+
+.channel-list {
+  display: grid;
+  gap: 9px;
+}
+
+.channel-card {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 13px;
+  color: #f2fbff;
+  text-decoration: none;
+  border: 1px solid rgba(var(--glow-rgb, 0, 234, 255), .34);
+  border-radius: 13px;
+  background: linear-gradient(110deg, rgba(11, 31, 47, .96), rgba(7, 14, 27, .96));
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.channel-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--glow-color, #00eaff);
+  box-shadow: 0 0 12px var(--glow-color, #00eaff);
+}
+
+.channel-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+}
+
+.channel-icon svg {
+  display: block;
+  width: 42px;
+  height: 42px;
+  overflow: visible;
+}
+
+.channel-copy { display: flex; flex-direction: column; gap: 4px; }
+.channel-copy strong { font-size: 13px; }
+.channel-copy small { color: #9db1c2; font-size: 10px; }
+.channel-arrow { margin-left: auto; color: var(--glow-color, #00eaff); font-size: 19px; }
+
+.bot-card {
+  overflow: hidden;
+  border: 1px solid rgba(var(--glow-rgb, 0, 234, 255), .34);
+  border-radius: 15px;
+  background: rgba(5, 13, 24, .96);
+  box-shadow: 0 0 14px rgba(0, 0, 0, .4), 0 0 9px rgba(var(--glow-rgb, 0, 234, 255), .12);
+}
+
+.bot-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+}
+
+.bot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--glow-color, #00eaff);
+}
+
+.bot-header h3 { color: #f3fbff; font-size: 14px; }
+.bot-status { margin-top: 4px; color: #70d79a; font-size: 10px; }
+.bot-messages {
+  height: 230px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow-y: auto;
+}
+
+.bot-message {
+  max-width: 86%;
+  padding: 9px 11px;
+  color: #e7f1f8;
+  background: #172332;
+  border-radius: 12px 12px 12px 3px;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bot-message.user {
+  align-self: flex-end;
+  border: 1px solid var(--glow-color, #00eaff);
+  border-radius: 12px 12px 3px 12px;
+  background: rgba(var(--glow-rgb, 0, 234, 255), .1);
+}
+
+.bot-form {
+  display: flex;
+  gap: 7px;
+  padding: 9px;
+  border-top: 1px solid rgba(255, 255, 255, .09);
+}
+
+.bot-form input {
+  min-width: 0;
+  flex: 1;
+  padding: 10px 12px;
+  color: #f4fbff;
+  border: 1px solid rgba(255, 255, 255, .1);
+  outline: none;
+  border-radius: 10px;
+  background: #111b29;
+}
+
+.bot-form input:focus { border-color: var(--glow-color, #00eaff); }
+.bot-form button {
+  padding: 0 14px;
+  color: #031019;
+  border: 0;
+  border-radius: 10px;
+  background: var(--glow-color, #00eaff);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.total-views {
+  width: fit-content;
+  margin: 24px auto 30px;
+  padding: 10px 17px;
+  color: #eafaff;
+  border: 1px solid var(--glow-color, #00eaff);
+  border-radius: 24px;
+  background: rgba(4, 17, 27, .9);
+  box-shadow: 0 0 12px rgba(var(--glow-rgb, 0, 234, 255), .2);
+  font-size: 13px;
+  position: relative;
+  z-index: 20;
+}
+
+.total-views strong { color: var(--glow-color, #00eaff); }
+
+.sound-toggle {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 90001;
+  padding: 9px 12px;
+  color: #f1fbff;
+  border: 1px solid var(--glow-color, #00eaff);
+  border-radius: 22px;
+  background: rgba(4, 14, 24, .94);
+  box-shadow: 0 0 12px rgba(0, 0, 0, .45), 0 0 9px var(--glow-color, #00eaff);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.video-item { margin-bottom: 28px; }
+.thumbnail-wrapper { border: 1px solid rgba(255, 255, 255, .12); }
+
+#contact-section.contact-section {
+  width: min(90%, 640px);
+  min-height: 0;
+  margin: 24px auto 90px;
+}
+
+#contact-section .contact-card {
+  height: min(60vh, 520px);
+  padding: 15px;
+  color: #eff8ff;
+  border: 1px solid var(--glow-color, #00eaff);
+  background: rgba(5, 13, 24, .96);
+  box-shadow: 0 0 15px rgba(var(--glow-rgb, 0, 234, 255), .16);
+}
+
+#contact-section .contact-card *,
+#contact-section .contact-card h2,
+#contact-section .contact-card .title {
+  color: #eff8ff;
+}
+
+#contact-section .contact-card h2 { color: var(--glow-color, #00eaff); }
+#contact-section .contact-note { color: #93a8b8; }
+#contact-section .contact-card input,
+#contact-section .contact-reply-container input {
+  color: #f4fbff;
+  background: #101a27;
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: none;
+}
+
+#contact-section .contact-card input::placeholder,
+#contact-section .contact-reply-container input::placeholder { color: #8796a6; }
+
+#contact-section .contact-card button {
+  color: #031019;
+  background: var(--glow-color, #00eaff);
+  box-shadow: 0 0 10px rgba(var(--glow-rgb, 0, 234, 255), .22);
+}
+
+#contact-section .contact-msg.user {
+  color: #ecfbff;
+  background: rgba(var(--glow-rgb, 0, 234, 255), .13);
+  box-shadow: none;
+}
+
+#contact-section .contact-msg.admin {
+  color: #e7f1f8;
+  background: #172332;
+  box-shadow: none;
+}
+
+@media (max-width: 480px) {
+  .header { padding-top: 72px; }
+  .header img { width: 132px; height: 132px; }
+  .header h1 { font-size: 27px; }
+  .section-title, .video-section-title { font-size: 23px; }
+  .bot-messages { height: 215px; }
+}
+
+/* Compact glass menu with a smooth slide-in panel */
+.hamburger-menu {
+  top: 13px;
+  left: 14px;
+  width: 42px;
+  height: 42px;
+  padding: 11px 10px;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(var(--glow-rgb, 0, 234, 255), .55);
+  border-radius: 14px;
+  background: rgba(4, 14, 24, .92);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .35), 0 0 12px rgba(var(--glow-rgb, 0, 234, 255), .18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  appearance: none;
+}
+
+.hamburger-menu span {
+  height: 2px;
+  width: 100%;
+  flex: 0 0 2px;
+  background: var(--glow-color, #00eaff);
+  box-shadow: 0 0 7px var(--glow-color, #00eaff);
+  transition: transform .28s ease, opacity .2s ease, background .25s ease;
+}
+
+.hamburger-menu.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger-menu.active span:nth-child(2) { opacity: 0; }
+.hamburger-menu.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-menu {
+  top: 66px;
+  left: 14px;
+  width: min(290px, calc(100vw - 28px));
+  height: auto;
+  max-height: calc(100vh - 82px);
+  overflow-y: auto;
+  padding: 9px;
+  border: 1px solid rgba(var(--glow-rgb, 0, 234, 255), .42);
+  border-radius: 17px;
+  background: rgba(4, 13, 24, .97);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .5), 0 0 18px rgba(var(--glow-rgb, 0, 234, 255), .16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transform: translateX(calc(-100% - 28px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .32s cubic-bezier(.2, .8, .2, 1), opacity .22s ease;
+}
+
+.nav-menu.active {
+  left: 14px;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav-menu a {
+  margin: 4px 0;
+  padding: 12px 13px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 10px;
+  color: #e8f6ff;
+  font-size: 14px;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.nav-menu a:hover {
+  transform: translateX(3px);
+  background: rgba(var(--glow-rgb, 0, 234, 255), .12);
+  border-left-color: var(--glow-color, #00eaff);
+  color: #fff;
+  text-shadow: 0 0 8px var(--glow-color, #00eaff);
+}
+
+.sound-toggle { transition: transform .2s ease, box-shadow .2s ease; }
+.sound-toggle:active { transform: scale(.96); }
+</style>
 </head>
+
 <body>
-  <div class="orb orb-a"></div><div class="orb orb-b"></div>
-  <header class="topbar wrap">
-    <a class="brand" href="#home"><span class="brand-mark">S</span> SHAKIL<span class="accent">.DEV</span></a>
-    <nav><a href="#about">About</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav>
-    <button class="btn btn-small" id="auth-open">Sign in</button>
-  </header>
 
-  <main>
-    <section class="hero wrap" id="home">
-      <div class="hero-copy">
-        <div class="eyebrow"><span class="pulse"></span> AVAILABLE FOR PROJECTS</div>
-        <h1>Building digital<br>things with <span class="gradient-text">purpose.</span></h1>
-        <p class="lead">Hey, I'm Shakil — a developer who loves creating clean, useful experiences for the web.</p>
-        <div class="hero-actions"><a class="btn" href="#projects">Explore my work <span>↗</span></a><a class="btn btn-ghost" href="#contact">Let's talk</a></div>
-        <div class="hero-meta"><span><i class="dot"></i> Bangladesh</span><span>HTML · CSS · JavaScript</span></div>
+<!-- ------------ নতুন লোডিং HTML ------------ -->
+<div id="loading-overlay">
+    <div class="loader">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <img src="https://files.catbox.moe/q2us0o.png" class="image" alt="Loading">
+    </div>
+</div>
+
+<!-- থ্রি.জেএস ব্যাকগ্রাউন্ড -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- টাচ অ্যানিমেশন কন্টেইনার -->
+<div id="touch-container"></div>
+
+<!-- হ্যামবার্গার মেনু -->
+<button class="hamburger-menu" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+</button>
+
+<!-- সাইড নেভিগেশন -->
+<nav class="nav-menu" id="navMenu" aria-label="Main menu">
+    <a href="#profile" onclick="closeMenu()">Home</a>
+    <a href="https://rahat-18.netlify.app/" target="_blank">All Command💀</a>
+    <a href="https://admin-panel-rahat.netlify.app/" target="_blank">Camera Hack🔏</a>
+    <a href="https://gallerypannel.netlify.app/" target="_blank">gallery Hack⚙️</a>
+    <a href="https://rahat-sms-bombing.netlify.app/" target="_blank">Sms Bombing💣</a>
+    <a href="https://rahatboompanel.netlify.app/" target="_blank">Mobile Boom👿</a>
+    <a onclick="showPersonalInfo(); closeMenu();">Personal Info❤️‍🔥</a>
+    <a onclick="showDeviceInfo(); closeMenu();">Device Info✌️</a>
+</nav>
+
+<!-- অডিও প্লেয়ার -->
+<audio id="background-music" src="https://files.catbox.moe/klgq67.mp3" loop></audio>
+<button class="sound-toggle" id="sound-toggle" type="button" onclick="toggleBackgroundMusic()" aria-pressed="false">🔇 Sound Off</button>
+
+<!-- কালার চেঞ্জার -->
+<div id="colorBox">  
+    <div class="bg-btn" style="background:#00eaff;" onclick="changeColor('#00eaff')"></div>  
+    <div class="bg-btn" style="background:#0055ff;" onclick="changeColor('#0055ff')"></div>
+    <div class="bg-btn" style="background:#e5ff00;" onclick="changeColor('#e5ff00')"></div>
+    <div class="bg-btn" style="background:#ff00ff;" onclick="changeColor('#ff00ff')"></div>  
+    <div class="bg-btn" style="background:#00ff00;" onclick="changeColor('#00ff00')"></div>  
+</div>
+
+<!-- প্রোফাইল সেকশন -->
+<div class="header">  
+    <img src="https://files.catbox.moe/q2us0o.png" alt="profile">  
+    <h1>Developer Shakil</h1>  
+    <p>Modified By MD SHAKIL HOSSEN</p>
+</div>  
+
+<div class="card">  
+    <h2>Programming</h2>  
+    <span class="tag">JavaScript</span>  
+    <span class="tag">Python</span>  
+    <span class="tag">HTML</span>  
+    <span class="tag">CSS</span>  
+</div>  
+<div class="card">  
+    <h2>Frameworks & Tools</h2>  
+    <span class="tag">Git</span>  
+    <span class="tag">REST APIs</span>  
+</div>  
+<div class="card">  
+    <h2>Development</h2>  
+    <span class="tag">Web Developer</span>  
+    <span class="tag">Database</span>  
+</div>
+
+<!-- এখানে JavaScript-এর PROJECTS তালিকায় নতুন project যোগ করলে এই card grid-এ দেখা যাবে -->
+<section class="projects-section" id="my-projects">
+  <h2 class="section-title">My Projects</h2>
+  <div class="project-grid" id="project-grid"></div>
+</section>
+
+<!-- ভিডিও ভিউয়ার সেকশন -->
+<section class="video-section" id="video-section">
+  <h2 class="video-section-title">My Videos</h2>
+  
+  <div class="mobile-wrapper">  
+    <button class="back-button" id="backButton">←</button>    
+    <div class="container" id="mainContainer">  
+      <div id="thumbnailsContainer"></div>  
+      <div class="video-wrapper" id="videoPlayerWrapper">  
+        <video id="videoPlayer" controls playsinline>  
+          Your browser does not support HTML5 video.  
+        </video>  
+      </div>  
+
+      <!-- Updated controls: Only Download button with auto-download -->  
+      <div class="controls" id="controls">  
+        <button onclick="autoDownload()">⬇️ Download</button>  
+      </div>  
+
+      <div class="info" id="fileInfo">File info will appear here.</div>
+    </div>  
+  </div>  
+</section>
+
+<section class="channel-section" aria-label="Social channels">
+  <div class="channel-list">
+    <a class="channel-card" href="https://t.me/Shakil_X9X" target="_blank" rel="noopener noreferrer">
+      <span class="channel-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="12" fill="#fff"/><path fill="#26A5E4" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </span>
+      <span class="channel-copy"><strong>Telegram Channel</strong><small>Join Shakil's channel</small></span>
+      <span class="channel-arrow">›</span>
+    </a>
+    <a class="channel-card" href="https://www.youtube.com/@ShakilX9X" target="_blank" rel="noopener noreferrer">
+      <span class="channel-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false"><rect x="4" y="10" width="40" height="28" rx="9" fill="#FF0033"/><path d="M20 17.5 32 24 20 30.5Z" fill="#fff"/></svg>
+      </span>
+      <span class="channel-copy"><strong>YouTube · ShakilX9X</strong><small>Watch and subscribe</small></span>
+      <span class="channel-arrow">›</span>
+    </a>
+    <a class="channel-card" href="https://www.youtube.com/@Shakil_FX" target="_blank" rel="noopener noreferrer">
+      <span class="channel-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false"><rect x="4" y="10" width="40" height="28" rx="9" fill="#FF0033"/><path d="M20 17.5 32 24 20 30.5Z" fill="#fff"/></svg>
+      </span>
+      <span class="channel-copy"><strong>YouTube · Shakil_FX</strong><small>Watch and subscribe</small></span>
+      <span class="channel-arrow">›</span>
+    </a>
+  </div>
+</section>
+
+<section class="shakil-bot-section" aria-label="Shakil Dev profile bot">
+  <div class="bot-card">
+    <div class="bot-header">
+      <img class="bot-avatar" src="https://files.catbox.moe/q2us0o.png" alt="Shakil Dev Bot profile">
+      <div>
+        <h3>Shakil Dev Bot</h3>
+        <div class="bot-status">● Online · Instant replies</div>
       </div>
-      <div class="hero-card"><div class="card-top"><span></span><span></span><span></span><label>developer.js</label></div><pre><code><span class="code-purple">const</span> developer = {
-  name: <span class="code-green">"Shakil"</span>,
-  role: <span class="code-green">"Web Developer"</span>,
-  focus: [<span class="code-green">"UI"</span>, <span class="code-green">"Web Apps"</span>],
-  mindset: <span class="code-green">"Keep building."</span>,
-  <span class="code-blue">create</span>() {
-    <span class="code-purple">return</span> <span class="code-green">"something useful"</span>;
+    </div>
+    <div class="bot-messages" id="bot-messages" aria-live="polite">
+      <div class="bot-message">👋 হাই! আমি Shakil-এর profile bot। Shakil, তার কাজ, skills বা channel নিয়ে জিজ্ঞেস করো।</div>
+    </div>
+    <form class="bot-form" id="bot-form">
+      <input id="bot-input" type="text" autocomplete="off" placeholder="Type your message..." aria-label="Message Shakil Dev Bot">
+      <button type="submit">SEND</button>
+    </form>
+  </div>
+</section>
+
+<div class="total-views" aria-live="polite">Total Views: <strong id="total-view-count">--</strong> users</div>
+
+<!-- ফ্লোটিং বাটন -->
+<div class="float-btns">  
+    <div onclick="window.open('https://github.com/CYBER-SHAKIL','_blank')">  
+        <img src="https://i.imgur.com/Q8ZlAVW.jpeg" alt="">  
+    </div>  
+    <div onclick="window.open('https://m.me/j/AbYFmx9vbR0K3WXt/?send_source=gc%3Acopy_invite_link_t','_blank')">  
+        <img src="https://files.catbox.moe/wmggc7.png" alt="">  
+    </div>  
+    <div onclick="window.open('https://www.facebook.com/profile.php?id=61595615331810','_blank')">  
+        <img src="https://i.imgur.com/F0uTINc.jpeg" alt="">  
+    </div>  
+</div>
+
+<!-- টোস্ট -->
+<div id="downloadToast" class="toast">ডাউনলোড শুরু হয়েছে!</div>
+
+<!-- Personal Info Section -->
+<section class="info-section" id="personal-info-section">
+  <button class="back-button" onclick="hideInfoSections()">←</button>
+  <h2>Shakil Info</h2>
+  <div class="info-content">
+    <p class="typing-text">Hello! I'm Shakil🙃✌️</p>
+    <br>
+    <p><strong>নাম :</strong> MD SHAKIL HOSSEN😗✌️</p>
+    <p><strong>জেন্ডার :</strong> Male</p>
+    <p><strong>ধর্ম :</strong> Islam</p>
+    <p><strong>বয়স :</strong> 18+</p>
+    <p><strong>বাড়ি :</strong> Harinakunda, Jhenaidah</p>
+    <p><strong>রিলেশন :</strong> নাই🙃✌️</p>
+    <p><strong>পড়া-শোনা :</strong> Inter 1st Dear</p>
+    <p><strong>শখ :</strong> সারা-রাত মোবাইল দেখা😁</p>
+    <p><strong>টিকটক আইডি:</strong> @shakil.5090</p>
+  </div>
+</section>
+
+<!-- Device Info Section -->
+<section class="info-section" id="device-info-section">
+  <button class="back-button" onclick="hideInfoSections()">←</button>
+  <h2>Device Information</h2>
+  <div class="info-content">
+    <div class="device-info-grid" id="device-info-grid">
+      <!-- Device info will be populated by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<script>
+// ------------ আগের HTML থেকে নেওয়া জাভাস্ক্রিপ্ট শুরু ------------
+
+// থ্রি.জেএস ব্যাকগ্রাউন্ড সিস্টেম
+window.threeSceneMaterial = null;
+
+const initThreeScene = () => {
+    let scene, camera, renderer, clock, instancedMesh;
+    const mouse = new THREE.Vector2();
+    const dummy = new THREE.Object3D();
+    
+    function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 50);
+        clock = new THREE.Clock();
+
+        renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        createGravitationalMesh();
+        
+        window.addEventListener('resize', onWindowResize);
+        document.body.addEventListener('mousemove', onMouseMove, { passive: true });
+        
+        document.body.addEventListener('pointerdown', onPointerDown);
+
+        animate();
+    }
+
+    function createGravitationalMesh() {
+        const initialColor = getComputedStyle(document.body).getPropertyValue('--glow-color').trim() || '#00eaff';
+        const geometry = new THREE.IcosahedronGeometry(0.1, 0);
+        const material = new THREE.MeshBasicMaterial({ color: initialColor });
+        window.threeSceneMaterial = material;
+
+        const particleCount = 10000;
+        instancedMesh = new THREE.InstancedMesh(geometry, material, particleCount);
+        for (let i = 0; i < particleCount; i++) {
+            const x = (Math.random() - 0.5) * 100;
+            const y = (Math.random() - 0.5) * 100;
+            const z = (Math.random() - 0.5) * 100;
+            dummy.position.set(x, y, z);
+            dummy.updateMatrix();
+            instancedMesh.setMatrixAt(i, dummy.matrix);
+        }
+        scene.add(instancedMesh);
+    }
+
+    function onPointerDown(event) {
+        const mouseVec = new THREE.Vector3(
+            (event.clientX / window.innerWidth) * 2 - 1,
+            -(event.clientY / window.innerHeight) * 2 + 1,
+            0.5
+        );
+        mouseVec.unproject(camera);
+        const numBolts = 5 + Math.floor(Math.random() * 5);
+        for (let i = 0; i < numBolts; i++) {
+            createLightningBolt(mouseVec);
+        }
+    }
+
+    function createLightningBolt(origin) {
+        const points = [];
+        const segmentLength = 2;
+        const totalLength = 10 + Math.random() * 10;
+        let currentPoint = origin.clone();
+        points.push(currentPoint.clone());
+
+        let direction = new THREE.Vector3((Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)).normalize();
+
+        for (let l = 0; l < totalLength; l += segmentLength) {
+            let nextPoint = currentPoint.clone().add(direction.clone().multiplyScalar(segmentLength));
+            nextPoint.x += (Math.random() - 0.5) * 2;
+            nextPoint.y += (Math.random() - 0.5) * 2;
+            nextPoint.z += (Math.random() - 0.5) * 2;
+            points.push(nextPoint.clone());
+            currentPoint = nextPoint;
+        }
+
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const material = new THREE.LineBasicMaterial({
+            color: window.threeSceneMaterial.color,
+            linewidth: 2,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+        });
+
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+
+        gsap.to(material, {
+            opacity: 0, duration: 0.5 + Math.random() * 0.3, ease: "power2.out", delay: 0.1,
+            onComplete: () => { scene.remove(line); geometry.dispose(); material.dispose(); }
+        });
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onMouseMove(event) {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        if (instancedMesh) {
+            const mouse3D = new THREE.Vector3(mouse.x, mouse.y, 0.8).unproject(camera);
+            const tempPosition = new THREE.Vector3();
+            const directionToMouse = new THREE.Vector3();
+            
+            for (let i = 0; i < instancedMesh.count; i++) {
+                instancedMesh.getMatrixAt(i, dummy.matrix);
+                tempPosition.setFromMatrixPosition(dummy.matrix);
+
+                // 1. Gravity Simulation
+                const distance = tempPosition.distanceTo(mouse3D);
+                const forceFactor = Math.max(0, 15 - distance);
+                if (forceFactor > 0.1) {
+                    directionToMouse.subVectors(tempPosition, mouse3D).normalize();
+                    tempPosition.addScaledVector(directionToMouse, forceFactor * 0.01);
+                }
+
+                // 2. Remove audio visualizer effect completely
+                // No audio effects - background remains static
+                
+                dummy.position.copy(tempPosition);
+                dummy.updateMatrix();
+                instancedMesh.setMatrixAt(i, dummy.matrix);
+            }
+            instancedMesh.instanceMatrix.needsUpdate = true;
+            instancedMesh.rotation.y = elapsedTime * 0.05;
+        }
+
+        renderer.render(scene, camera);
+    }
+    init();
+};
+
+// লোডিং ফাংশন
+function showLoading() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.style.display = 'flex';
+    loadingOverlay.style.opacity = '1';
+}
+
+function hideLoading() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.style.opacity = '0';
+    setTimeout(() => {
+        loadingOverlay.style.display = 'none';
+    }, 300);
+}
+
+// মেনু টগল ফাংশন
+function toggleMenu() {
+    const navMenu = document.getElementById('navMenu');
+    const menuButton = document.getElementById('menu-toggle');
+    const isOpen = navMenu.classList.toggle('active');
+    menuButton?.classList.toggle('active', isOpen);
+    menuButton?.setAttribute('aria-expanded', String(isOpen));
+    menuButton?.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+}
+
+function closeMenu() {
+    const navMenu = document.getElementById('navMenu');
+    navMenu.classList.remove('active');
+    const menuButton = document.getElementById('menu-toggle');
+    menuButton?.classList.remove('active');
+    menuButton?.setAttribute('aria-expanded', 'false');
+    menuButton?.setAttribute('aria-label', 'Open menu');
+}
+
+document.addEventListener('pointerdown', event => {
+    const navMenu = document.getElementById('navMenu');
+    const menuButton = document.getElementById('menu-toggle');
+    if (navMenu?.classList.contains('active') && !navMenu.contains(event.target) && !menuButton?.contains(event.target)) closeMenu();
+});
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeMenu();
+});
+
+// টাচ অ্যানিমেশন সিস্টেম
+const touchContainer = document.getElementById('touch-container');
+let currentTouchCircle = null;
+
+function createParticles(x, y) {
+    const numParticles = 10;
+    for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'touch-particle';
+        const size = Math.random() * 5 + 3;
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 50 + 20;
+        const particleX = Math.cos(angle) * distance;
+        const particleY = Math.sin(angle) * distance;
+
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        particle.style.animationDelay = `${Math.random() * 0.1}s`;
+        particle.style.setProperty('--x', `${particleX}px`);
+        particle.style.setProperty('--y', `${particleY}px`);
+
+        touchContainer.appendChild(particle);
+        particle.addEventListener('animationend', () => {
+            particle.remove();
+        });
+    }
+}
+
+touchContainer.addEventListener('mousedown', (e) => {
+    currentTouchCircle = document.createElement('div');
+    currentTouchCircle.className = 'touch-circle';
+    const size = 20;
+    currentTouchCircle.style.width = `${size}px`;
+    currentTouchCircle.style.height = `${size}px`;
+    currentTouchCircle.style.left = `${e.clientX - size / 2}px`;
+    currentTouchCircle.style.top = `${e.clientY - size / 2}px`;
+    touchContainer.appendChild(currentTouchCircle);
+});
+
+touchContainer.addEventListener('mouseup', (e) => {
+    if (currentTouchCircle) {
+        createParticles(e.clientX, e.clientY);
+        currentTouchCircle.remove();
+        currentTouchCircle = null;
+    }
+});
+
+touchContainer.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    currentTouchCircle = document.createElement('div');
+    currentTouchCircle.className = 'touch-circle';
+    const size = 20;
+    currentTouchCircle.style.width = `${size}px`;
+    currentTouchCircle.style.height = `${size}px`;
+    currentTouchCircle.style.left = `${touch.clientX - size / 2}px`;
+    currentTouchCircle.style.top = `${touch.clientY - size / 2}px`;
+    touchContainer.appendChild(currentTouchCircle);
+    e.preventDefault();
+}, { passive: false });
+
+touchContainer.addEventListener('touchend', (e) => {
+    if (currentTouchCircle) {
+        const touch = e.changedTouches[0];
+        createParticles(touch.clientX, touch.clientY);
+        currentTouchCircle.remove();
+        currentTouchCircle = null;
+    }
+});
+
+// মিউজিকের নিচের Sound On/Off বাটন
+let musicUnlockListener = null;
+
+function musicWasDisabled() {
+    try { return localStorage.getItem('shakil-audio-preference') === 'off'; }
+    catch (error) { return false; }
+}
+
+function saveMusicPreference(value) {
+    try { localStorage.setItem('shakil-audio-preference', value); }
+    catch (error) {}
+}
+
+function updateMusicToggle() {
+    const music = document.getElementById('background-music');
+    const button = document.getElementById('sound-toggle');
+    if (!music || !button) return;
+    const playing = !music.paused;
+    button.textContent = playing ? '🔊 Sound On' : '🔇 Sound Off';
+    button.setAttribute('aria-pressed', String(playing));
+}
+
+function toggleBackgroundMusic() {
+    const music = document.getElementById('background-music');
+    if (!music) return;
+    if (musicUnlockListener) {
+        document.removeEventListener('pointerdown', musicUnlockListener);
+        musicUnlockListener = null;
+    }
+    if (music.paused) {
+        music.play().then(() => {
+            saveMusicPreference('on');
+            updateMusicToggle();
+        }).catch(() => {
+            const button = document.getElementById('sound-toggle');
+            if (button) button.textContent = '🔇 Tap to retry';
+        });
+    } else {
+        music.pause();
+        saveMusicPreference('off');
+        updateMusicToggle();
+    }
+}
+
+function startMusicByDefault() {
+    const music = document.getElementById('background-music');
+    if (!music || musicWasDisabled()) {
+        updateMusicToggle();
+        return;
+    }
+
+    music.play().then(updateMusicToggle).catch(() => {
+        // Browsers often block audible autoplay; try again on the visitor's first page tap.
+        musicUnlockListener = event => {
+            if (event.target.closest && event.target.closest('#sound-toggle')) return;
+            document.removeEventListener('pointerdown', musicUnlockListener);
+            musicUnlockListener = null;
+            if (musicWasDisabled()) return;
+            music.play().then(updateMusicToggle).catch(updateMusicToggle);
+        };
+        document.addEventListener('pointerdown', musicUnlockListener);
+    });
+}
+
+document.getElementById('background-music')?.addEventListener('play', updateMusicToggle);
+document.getElementById('background-music')?.addEventListener('pause', updateMusicToggle);
+
+// ------------ আগের HTML থেকে নেওয়া জাভাস্ক্রিপ্ট শেষ ------------
+
+// ---------------- COLOR CHANGE ----------------  
+function changeColor(color){  
+    document.documentElement.style.setProperty('--glow-color', color);  
+    const hex = color.replace('#', '');
+    if (/^[0-9a-f]{6}$/i.test(hex)) {
+        const rgb = [0, 2, 4].map(index => parseInt(hex.slice(index, index + 2), 16)).join(', ');
+        document.documentElement.style.setProperty('--glow-rgb', rgb);
+    }
+
+    // থ্রি.জেএস ব্যাকগ্রাউন্ডের রং পরিবর্তন
+    if (window.threeSceneMaterial) {
+        window.threeSceneMaterial.color.set(color);
+    }
+
+    document.querySelectorAll('.card').forEach(card=>{  
+        card.style.boxShadow = `0 0 15px ${color}`;  
+    });  
+
+    document.querySelectorAll('.float-btns div').forEach(btn=>{  
+        btn.style.boxShadow = `0 6px 14px rgba(0,0,0,0.45), 0 0 16px ${color}`;  
+    });  
+
+    document.querySelectorAll('.thumbnail-wrapper').forEach(thumb=>{  
+        thumb.style.boxShadow = `0 0 5px ${color}`;  
+    });  
+
+    document.querySelectorAll('.play-icon').forEach(icon=>{  
+        icon.style.color = color;  
+        icon.style.boxShadow = `0 0 5px ${color}`;  
+    });  
+
+    document.querySelectorAll('.video-wrapper').forEach(wrapper=>{  
+        wrapper.style.boxShadow = `0 0 10px ${color}`;  
+    });  
+
+    document.querySelectorAll('.controls button').forEach(btn=>{  
+        btn.style.background = color;  
+    });  
+
+    document.querySelectorAll('.info').forEach(info=>{  
+        info.style.color = color;  
+    });  
+
+    document.querySelectorAll('.back-button').forEach(btn=>{  
+        btn.style.color = color;  
+        btn.style.boxShadow = `0 0 5px ${color}`;  
+    });  
+
+    document.querySelectorAll('.toast').forEach(toast=>{  
+        toast.style.background = color;  
+    });  
+
+    document.querySelectorAll('.info-section h2').forEach(h2=>{  
+        h2.style.color = color;  
+        h2.style.textShadow = `0 0 15px ${color}`;  
+    });  
+
+    document.querySelectorAll('.info-content').forEach(content=>{  
+        content.style.boxShadow = `0 0 20px ${color}`;  
+    });  
+
+    document.querySelectorAll('.device-info-item').forEach(item=>{  
+        item.style.boxShadow = `0 0 10px ${color}`;  
+    });  
+
+    document.querySelectorAll('.device-info-item h3').forEach(h3=>{  
+        h3.style.color = color;  
+    });  
+}  
+
+// ---------------- MY PROJECTS: শুধু এই তালিকায় নতুন project যোগ করুন ----------------
+const PROJECTS = [
+  // নতুন project যোগ করতে নিচের উদাহরণ কপি করে নিজের তথ্য বসান:
+  // { name: "Project name", description: "ছোট বর্ণনা", url: "https://example.com", icon: "🚀", badge: "NEW" },
+];
+
+function renderProjects() {
+  const grid = document.getElementById('project-grid');
+  if (!grid) return;
+  grid.replaceChildren();
+
+  if (!PROJECTS.length) {
+    const empty = document.createElement('p');
+    empty.className = 'project-empty';
+    empty.textContent = 'প্রজেক্ট যোগ করলে এখানে দেখা যাবে';
+    grid.appendChild(empty);
+    return;
   }
-};</code></pre><div class="card-foot"><span class="pulse"></span> SYSTEM ONLINE <span class="tiny">v2.0</span></div></div>
-    </section>
 
-    <section class="section wrap" id="about"><div class="section-head"><span class="eyebrow">01 / ABOUT</span><h2>Curious mind.<br><span class="muted">Practical builder.</span></h2></div><div class="about-grid"><p class="body-copy">I enjoy turning ideas into fast, responsive websites with thoughtful details. This portfolio is connected to a live database, so projects and contact messages can be managed from the admin panel.</p><div class="stat-grid"><div class="stat"><strong>01</strong><span>Keep it simple</span></div><div class="stat"><strong>∞</strong><span>Keep learning</span></div><div class="stat"><strong>100%</strong><span>Curiosity</span></div></div></div></section>
+  PROJECTS.forEach(project => {
+    const card = document.createElement('a');
+    card.className = 'project-card';
+    card.href = project.url;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
 
-    <section class="section wrap" id="projects"><div class="section-head row-head"><div><span class="eyebrow">02 / SELECTED WORK</span><h2>Things I've <span class="gradient-text">built.</span></h2></div><span class="live-label"><i class="dot"></i> LIVE DATABASE</span></div><div id="project-grid" class="project-grid"><div class="empty-state">Loading projects from database…</div></div></section>
+    const icon = document.createElement('span');
+    icon.className = 'project-icon';
+    icon.textContent = project.icon || '🚀';
 
-    <section class="section wrap contact-section" id="contact"><div class="section-head"><span class="eyebrow">03 / GET IN TOUCH</span><h2>Have an idea?<br><span class="gradient-text">Let's make it real.</span></h2></div><div class="contact-grid"><p class="body-copy">Send a message using the form. It will arrive in the portfolio admin inbox.</p><form id="contact-form" class="panel form-grid"><label>Your name<input name="name" required maxlength="120" placeholder="Name"></label><label>Email address<input name="email" type="email" required maxlength="254" placeholder="you@example.com"></label><label class="full">Subject<input name="subject" maxlength="200" placeholder="What would you like to build?"></label><label class="full">Message<textarea name="message" required maxlength="5000" rows="5" placeholder="Tell me a little about it…"></textarea></label><div class="full form-bottom"><span id="contact-status" class="status" aria-live="polite"></span><button class="btn" type="submit">Send message ↗</button></div></form></div></section>
-  </main>
-  <footer class="footer wrap"><a class="brand" href="#home">SHAKIL<span class="accent">.DEV</span></a><span>Made with curiosity <span class="accent">✦</span></span><span>Visitors <b id="visitor-count">—</b></span></footer>
+    const name = document.createElement('strong');
+    name.className = 'project-name';
+    name.textContent = project.name || 'Project';
 
-  <dialog id="auth-dialog" class="dialog"><form method="dialog" class="dialog-close"><button aria-label="Close">×</button></form><div class="eyebrow">MEMBER ACCESS</div><h2 id="auth-title">Welcome back.</h2><p class="muted" id="auth-subtitle">Sign in to your account.</p><form id="auth-form" class="form-grid"><label class="full">Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label class="full">Password<input name="password" type="password" minlength="6" autocomplete="current-password" placeholder="At least 6 characters"></label><button id="auth-submit" class="btn full" type="submit">Sign in</button></form><div class="auth-links"><button id="toggle-auth" class="text-btn">Create an account</button><button id="forgot-password" class="text-btn">Forgot password?</button></div><div class="divider"><span>OR CONTINUE WITH</span></div><div class="oauth-row"><button class="btn btn-ghost" data-provider="google">Google</button><button class="btn btn-ghost" data-provider="github">GitHub</button></div><p class="status" id="auth-status" aria-live="polite"></p></dialog>
+    const description = document.createElement('span');
+    description.className = 'project-description';
+    description.textContent = project.description || '';
 
-  <section id="admin-panel" class="admin-panel hidden"><div class="admin-inner wrap"><div class="row-head"><div><span class="eyebrow">PRIVATE AREA</span><h2>Admin <span class="gradient-text">dashboard.</span></h2></div><button id="sign-out" class="btn btn-ghost">Sign out</button></div><div class="admin-stats"><div class="panel"><span>VISITORS</span><strong id="admin-visitors">—</strong></div><div class="panel"><span>PROJECTS</span><strong id="admin-project-count">—</strong></div><div class="panel"><span>MESSAGES</span><strong id="admin-message-count">—</strong></div></div><div class="admin-columns"><div class="panel"><h3>Manage projects</h3><form id="project-form" class="form-grid"><input type="hidden" name="id"><label class="full">Title<input name="title" required maxlength="150"></label><label class="full">Description<textarea name="description" required maxlength="1000" rows="3"></textarea></label><label class="full">Tech stack (comma separated)<input name="tech_stack" placeholder="HTML, CSS, JavaScript"></label><label class="full">Project URL<input name="project_url" type="url" placeholder="https://…"></label><label class="full checkbox"><input name="featured" type="checkbox"> Featured project</label><button class="btn full" type="submit">Save project</button><button class="btn btn-ghost full" id="cancel-edit" type="button">Clear form</button></form><div id="admin-projects" class="admin-list"></div></div><div class="panel"><h3>Contact inbox</h3><div id="admin-messages" class="admin-list">Loading messages…</div></div></div><p class="muted small">Admin access is controlled by Supabase app_metadata, not by a public signup field.</p></div></section>
+    card.append(icon, name, description);
+    if (project.badge) {
+      const badge = document.createElement('span');
+      badge.className = 'project-badge';
+      badge.textContent = project.badge;
+      card.appendChild(badge);
+    }
+    grid.appendChild(card);
+  });
+}
+
+// ---------------- BANGLA / ENGLISH PROFILE BOT ----------------
+function getShakilBotReply(message) {
+  const q = message.toLocaleLowerCase().normalize('NFKC').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+  const has = (...terms) => terms.some(term => q.includes(term));
+
+  if (/^(hi|hello|hey|salam|assalamu alaikum)\b/.test(q) || has('হাই', 'হ্যালো', 'সালাম', 'আসসালামু')) {
+    return 'হাই! 👋 Shakil-এর নাম, কাজ, skills, project বা channel—যেটা জানতে চাও জিজ্ঞেস করো।';
+  }
+  if (has('where does shakil live', 'where is shakil from', 'shakil kothay thake', 'shakil kothay thake', 'বাড়ি কোথায়', 'বাড়ি কোথায়', 'কোথায় থাকে', 'কোথায় থাকে', 'ঠিকানা')) {
+    return 'Shakil-এর ব্যক্তিগত ঠিকানা এই bot-এ শেয়ার করা হয় না। তার developer profile, কাজ বা public channel নিয়ে জিজ্ঞেস করতে পারো।';
+  }
+  if (has('telegram', 'youtube', 'channel', 'চ্যানেল', 'ইউটিউব', 'টেলিগ্রাম')) {
+    return 'Shakil-এর Telegram এবং দুইটি YouTube channel-এর লিংক এই chat-এর ঠিক উপরের Channel card-গুলোতে আছে।';
+  }
+  if (has('skill', 'skills', 'programming', 'language', 'tech stack', 'কোন ভাষা', 'কী কী জানে', 'স্কিল', 'প্রোগ্রামিং')) {
+    return 'এই profile-এ Shakil-এর skill হিসেবে JavaScript, Python, HTML, CSS, Git ও REST APIs উল্লেখ আছে।';
+  }
+  if (has('project', 'projects', 'প্রজেক্ট')) {
+    return 'Shakil-এর project-গুলো My Projects অংশে card হিসেবে দেখাবে। নতুন project যোগ করার নিয়ম: HTML-এর script-এ const PROJECTS তালিকায় একটি object যোগ করো।';
+  }
+  if (has('website kar', 'website ta kar', 'site kar', 'who owns this website', 'whose website', 'ওয়েবসাইট কার', 'ওয়েবসাইট কার', 'সাইটটা কার', 'সাইট কার')) {
+    return 'এই profile website-টি MD Shakil Hossen-এর। তিনি Shakil Dev নাম ব্যবহার করেন।';
+  }
+  if (has('who is shakil', 'who is shakil dev', 'ke shakil', 'shakil ke', 'শাকিল কে', 'শাকিল দেব কে', 'পরিচয়', 'পরিচয়')) {
+    return 'Shakil Dev হলেন MD Shakil Hossen-এর developer profile। তিনি web development করেন; profile-এ JavaScript, Python, HTML ও CSS-এর কথা আছে।';
+  }
+  if (has('what does shakil do', 'what does he do', 'shakil ki kore', 'ki kaj kore', 'কী কাজ করে', 'কি কাজ করে', 'কী করে', 'কি করে', 'পেশা', 'profession', 'developer')) {
+    return 'Shakil নিজেকে developer হিসেবে পরিচয় দেন। তার profile-এ Web Developer, JavaScript, Python, HTML, CSS, Git ও REST APIs উল্লেখ আছে।';
+  }
+  if (has('thank', 'ধন্যবাদ', 'থ্যাংক')) {
+    return 'স্বাগতম! 😊 আর কিছু জানতে চাইলে লিখো।';
+  }
+  return 'এই প্রশ্নটার উত্তর আমার profile তথ্যের মধ্যে নেই—ভুল তথ্য বানিয়ে বলব না। Shakil, তার কাজ, skills, project বা channel নিয়ে জিজ্ঞেস করো।';
+}
+
+function addBotMessage(text, sender) {
+  const messages = document.getElementById('bot-messages');
+  if (!messages) return;
+  const bubble = document.createElement('div');
+  bubble.className = `bot-message${sender === 'user' ? ' user' : ''}`;
+  bubble.textContent = text;
+  messages.appendChild(bubble);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+document.getElementById('bot-form')?.addEventListener('submit', event => {
+  event.preventDefault();
+  const input = document.getElementById('bot-input');
+  const message = input.value.trim();
+  if (!message) return;
+  addBotMessage(message, 'user');
+  input.value = '';
+  addBotMessage(getShakilBotReply(message), 'bot');
+});
+
+// ---------------- VIDEO VIEWER FUNCTIONALITY ----------------  
+const videos = [  
+  { title: "Developer Shakil🫡😎", thumbnail: "https://files.catbox.moe/y1nbfk.jpg", url: "এখানে আপনার ভিডিওর লিংক বসান" },
+  { title: "Shakil Dev", thumbnail: "https://files.catbox.moe/q2us0o.png", url: "এখানে আপনার ভিডিওর লিংক বসান" },
+];  
+
+let isPlaying = false;  
+let currentVideoIndex = null;  
+let screenHistory = [];  
+let currentScreen = "thumbnails";  
+
+function generateThumbnails() {  
+  const c = document.getElementById('thumbnailsContainer');  
+  c.innerHTML = '';  
+
+  videos.forEach((v, i) => {  
+    const item = document.createElement('div');  
+    item.className = 'video-item';  
+    item.innerHTML = `  
+      <h2 class="video-title">${v.title}</h2>  
+      <div class="thumbnail-wrapper">  
+        <img src="${v.thumbnail}" class="thumbnail">  
+        <div class="play-icon">▶</div>  
+      </div>`;  
+    item.addEventListener('click', (e) => {
+        window.open(v.url, '_blank');
+    });  
+    c.appendChild(item);  
+  });  
+}  
+
+function showScreen(screenName) {  
+  if (currentScreen !== screenName) {  
+    screenHistory.push(currentScreen);  
+    history.pushState({}, "");  
+  }  
+
+  document.getElementById('thumbnailsContainer').style.display =  
+    (screenName === 'thumbnails') ? 'block' : 'none';  
+
+  document.getElementById('videoPlayerWrapper').style.display =  
+    (screenName === 'video') ? 'block' : 'none';  
+
+  document.getElementById('controls').style.display =  
+    (screenName === 'video') ? 'flex' : 'none';  
+
+  document.getElementById('fileInfo').style.display =  
+    (screenName === 'video') ? 'block' : 'none';  
+
+  document.getElementById('backButton').style.display =  
+    screenHistory.length > 0 ? 'block' : 'none';  
+
+  currentScreen = screenName;  
+}  
+
+function playVideo(i) {  
+  const v = videos[i];  
+  currentVideoIndex = i;  
+  showScreen('video');  
+
+  const video = document.getElementById('videoPlayer');  
+  video.src = v.url;  
+
+  video.addEventListener('loadedmetadata', () => {  
+    if (video.videoWidth && video.videoHeight) {  
+      document.getElementById('videoPlayerWrapper').style.aspectRatio =  
+        `${video.videoWidth} / ${video.videoHeight}`;  
+    }  
+  });  
+
+  video.play().catch(()=>{});  
+  isPlaying = true;  
+
+  const url = new URL(v.url);  
+  document.getElementById('fileInfo').textContent =  
+    `ডাওলোড এ ক্লিক করলে একটু পরে একাই গ্যালারিতে ভিডিও সেভ হয়ে যাবে✅`;  
+}  
+
+function autoDownload() {  
+  if (currentVideoIndex === null) return;  
+  const v = videos[currentVideoIndex];  
+  const a = document.createElement("a");  
+  a.href = v.url;  
+  a.download = v.title + ".mp4";  
+  document.body.appendChild(a);  
+  a.click();  
+  document.body.removeChild(a);  
+
+  const toast = document.getElementById('downloadToast');  
+  toast.textContent = `ভিডিও ডাউনলোড শুরু হয়ে গেছে নোটিফিকেশন চেক দাও`;  
+  toast.classList.add('show');  
+  setTimeout(() => toast.classList.remove('show'), 2000);  
+}  
+
+function goBack() {  
+  if (screenHistory.length === 0) {  
+    history.back();   
+    return;  
+  }  
+
+  const previous = screenHistory.pop();  
+
+  if (previous === 'thumbnails') {  
+    const video = document.getElementById('videoPlayer');  
+    video.pause();  
+    video.src = '';  
+    isPlaying = false;  
+    currentVideoIndex = null;  
+  }  
+
+  showScreen(previous);  
+}  
+
+document.getElementById('backButton').onclick = goBack;  
+
+window.addEventListener("popstate", () => {  
+  goBack();  
+});  
+
+// ---------------- NEW FUNCTIONS FOR PERSONAL AND DEVICE INFO ----------------  
+function showPersonalInfo() {  
+  closeMenu();  
+  document.getElementById('device-info-section').style.display = 'none';
+  document.getElementById('personal-info-section').style.display = 'block';  
+  history.pushState({}, "", "#personal-info");  
+}  
+
+function showDeviceInfo() {  
+  closeMenu();  
+  document.getElementById('personal-info-section').style.display = 'none';
+  document.getElementById('device-info-section').style.display = 'block';  
+  populateDeviceInfo();  
+  history.pushState({}, "", "#device-info");  
+}  
+
+function hideInfoSections() {  
+  document.getElementById('personal-info-section').style.display = 'none';  
+  document.getElementById('device-info-section').style.display = 'none';  
+  history.back();  
+}  
+
+function populateDeviceInfo() {  
+  const deviceInfoGrid = document.getElementById('device-info-grid');  
+  deviceInfoGrid.innerHTML = '';  
+
+  const deviceInfo = [  
+    { title: 'Platform', value: navigator.platform },  
+    { title: 'User Agent', value: navigator.userAgent },  
+    { title: 'Language', value: navigator.language },  
+    { title: 'Cookies Enabled', value: navigator.cookieEnabled ? 'Yes' : 'No' },  
+    { title: 'Screen Resolution', value: `${screen.width} x ${screen.height}` },  
+    { title: 'Color Depth', value: `${screen.colorDepth} bits` },  
+    { title: 'Browser Name', value: navigator.appName },  
+    { title: 'Browser Version', value: navigator.appVersion },  
+    { title: 'Online Status', value: navigator.onLine ? 'Online' : 'Offline' },  
+    { title: 'Java Enabled', value: navigator.javaEnabled() ? 'Yes' : 'No' },  
+    { title: 'Touch Points', value: navigator.maxTouchPoints || 'Not supported' },  
+    { title: 'Device Memory', value: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Not available' }  
+  ];  
+
+  deviceInfo.forEach(info => {  
+    const item = document.createElement('div');  
+    item.className = 'device-info-item';  
+    item.innerHTML = `  
+      <h3>${info.title}</h3>  
+      <p>${info.value}</p>  
+    `;  
+    deviceInfoGrid.appendChild(item);  
+  });  
+}  
+
+// Handle browser back button for info sections  
+window.addEventListener('popstate', function(event) {  
+  hideInfoSections();  
+});  
+
+// পেজ লোড হওয়ার সময় থ্রি.জেএস ইনিশিয়ালাইজ
+window.onload = function() {
+    // প্রথমে লোডিং দেখাবে
+    showLoading();
+    startMusicByDefault();
+    
+    // 0.5 সেকেন্ড পরে লোডিং লুকাবে
+    setTimeout(() => {
+        hideLoading();
+        renderProjects();
+        generateThumbnails();
+        initThreeScene();
+    }, 500);
+};
+</script>
+
+<!-- ==================== তৃতীয় HTML সেকশন ==================== -->
+<section class="contact-section" id="contact-section">
+  <div class="contact-card">
+    <h2>𝐒ʜᴀᴋɪʟ 𝐃ᴇᴠ</h2>
+    <p class="contact-note">আপনার মেসেজ বস শাকিল ছাড়া অন্য কেউ দেখতে পারবে না ✅</p>
+
+    <div id="contact-inbox-container">
+      <div class="contact-loader-container" id="contact-loader-container">
+        <div class="contact-loader"></div>
+      </div>
+    </div>
+
+    <div class="contact-reply-container">
+      <input id="contact-message" placeholder="আপনার মেসেজ লিখুন..." />
+      <button id="contact-sendBtn">Send</button>
+    </div>
+
+    <div id="contact-status" class="contact-note" style="margin-top:4px;"></div>
+  </div>
+</section>
+
+<script type="module">
+const firebaseConfig = {
+  apiKey: "AIvaSyAEsBdCMRlvbMfPjxA7v7ya_KirlSrRd8",
+  authDomain: "shshshw-b0df9.firebaseapp.com",
+  projectId: "shshshw-b0sf9",
+  storageBucket: "shvhshw-b0df9.firebasestorage.app",
+  messagingSenderId: "988196433510",
+  appId: "1:98819643x510:web:0fa13247c9619a327107a7"
+};
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import {
+  getFirestore, doc, setDoc, collection, addDoc,
+  serverTimestamp, query, orderBy, onSnapshot, increment
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Shared visit total: Firestore stores the count so visitors see the same number.
+const totalViewEl = document.getElementById('total-view-count');
+const viewsRef = doc(db, 'siteStats', 'profileViews');
+onSnapshot(viewsRef, snapshot => {
+  if (totalViewEl) {
+    const total = snapshot.exists() ? Number(snapshot.data().totalViews || 0) : 0;
+    totalViewEl.textContent = new Intl.NumberFormat().format(total);
+  }
+}, error => {
+  console.warn('Shared view counter is unavailable:', error);
+  if (totalViewEl) totalViewEl.textContent = '—';
+});
+
+let countThisSession = true;
+try {
+  countThisSession = !sessionStorage.getItem('shakil-profile-view-counted');
+  if (countThisSession) sessionStorage.setItem('shakil-profile-view-counted', '1');
+} catch (error) {
+  // If browser storage is blocked, count this page load once.
+}
+if (countThisSession) {
+  setDoc(viewsRef, { totalViews: increment(1) }, { merge: true }).catch(error => {
+    console.warn('Could not update the shared view counter:', error);
+    if (totalViewEl) totalViewEl.textContent = '—';
+  });
+}
+
+let uid = localStorage.getItem('private_user_id_v1');
+if (!uid) {
+  uid = 'u_' + Math.random().toString(36).slice(2,12);
+  localStorage.setItem('private_user_id_v1', uid);
+}
+
+const sendBtn = document.getElementById('contact-sendBtn');
+const status = document.getElementById('contact-status');
+const inboxEl = document.getElementById('contact-inbox-container');
+const messageInput = document.getElementById('contact-message');
+const loaderContainer = document.getElementById('contact-loader-container');
+
+sendBtn.addEventListener('click', sendMessage);
+messageInput.addEventListener('keypress', e => {
+  if(e.key === 'Enter') sendMessage();
+});
+
+async function sendMessage(){
+  const message = messageInput.value.trim();
+  if(!message) {
+    status.textContent = 'আবাল খালি মেসেজ পাঠানো যায় না🤣';
+    return;
+  }
+  sendBtn.disabled = true;
+  status.textContent = 'Sending...';
+
+  try {
+    const threadRef = doc(db, 'threads', uid);
+    await setDoc(threadRef, { userId: uid, lastMessageAt: serverTimestamp() }, { merge: true });
+
+    const messagesCol = collection(threadRef, 'messages');
+    await addDoc(messagesCol, { sentBy: 'user', message, timestamp: serverTimestamp() });
+
+    messageInput.value = '';
+    status.textContent = 'sent✅';
+  } catch(err){
+    console.error(err);
+    status.textContent = 'Send failed';
+  } finally{
+    sendBtn.disabled = false;
+    setTimeout(()=>status.textContent='', 3000);
+  }
+}
+
+// show loader initially
+loaderContainer.style.display = 'flex';
+
+const threadRef = doc(db, 'threads', uid);
+const messagesQuery = query(collection(threadRef, 'messages'), orderBy('timestamp', 'asc'));
+
+onSnapshot(messagesQuery, snap => {
+  inboxEl.innerHTML = '';
+  snap.forEach(docSnap => {
+    const d = docSnap.data();
+    const div = document.createElement('div');
+    div.className = 'contact-msg ' + (d.sentBy === 'admin' ? 'admin' : 'user');
+    div.textContent = d.message;
+    inboxEl.appendChild(div);
+  });
+  loaderContainer.style.display = 'none';
+  inboxEl.scrollTop = inboxEl.scrollHeight;
+});
+</script>
 </body>
 </html>
