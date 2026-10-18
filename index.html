@@ -2237,6 +2237,39 @@ window.onload = function() {
   </div>
 </section>
 
+<!-- Public Supabase config: this key is designed for browser use; database writes are server-side. -->
+<script src="./config.js"></script>
+<script>
+(async function loadSharedVisitCount() {
+  const counter = document.getElementById("total-view-count");
+  if (!counter) return;
+  const baseUrl = window.SUPABASE_URL;
+  const publicKey = window.SUPABASE_PUBLISHABLE_KEY;
+  if (!baseUrl || !publicKey) {
+    counter.textContent = "—";
+    return;
+  }
+  try {
+    const response = await fetch(baseUrl + "/functions/v1/record-visit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": publicKey
+      },
+      body: "{}",
+      cache: "no-store"
+    });
+    if (!response.ok) throw new Error("Visit counter request failed: " + response.status);
+    const result = await response.json();
+    if (!Number.isFinite(Number(result.total))) throw new Error("Invalid visit total");
+    counter.textContent = new Intl.NumberFormat().format(Number(result.total));
+  } catch (error) {
+    console.warn("Shared visit counter is temporarily unavailable:", error);
+    counter.textContent = "—";
+  }
+})();
+</script>
+
 <script type="module">
 const firebaseConfig = {
   apiKey: "AIvaSyAEsBdCMRlvbMfPjxA7v7ya_KirlSrRd8",
@@ -2256,32 +2289,6 @@ import {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Shared visit total: Firestore stores the count so visitors see the same number.
-const totalViewEl = document.getElementById('total-view-count');
-const viewsRef = doc(db, 'siteStats', 'profileViews');
-onSnapshot(viewsRef, snapshot => {
-  if (totalViewEl) {
-    const total = snapshot.exists() ? Number(snapshot.data().totalViews || 0) : 0;
-    totalViewEl.textContent = new Intl.NumberFormat().format(total);
-  }
-}, error => {
-  console.warn('Shared view counter is unavailable:', error);
-  if (totalViewEl) totalViewEl.textContent = '—';
-});
-
-let countThisSession = true;
-try {
-  countThisSession = !sessionStorage.getItem('shakil-profile-view-counted');
-  if (countThisSession) sessionStorage.setItem('shakil-profile-view-counted', '1');
-} catch (error) {
-  // If browser storage is blocked, count this page load once.
-}
-if (countThisSession) {
-  setDoc(viewsRef, { totalViews: increment(1) }, { merge: true }).catch(error => {
-    console.warn('Could not update the shared view counter:', error);
-    if (totalViewEl) totalViewEl.textContent = '—';
-  });
-}
 
 let uid = localStorage.getItem('private_user_id_v1');
 if (!uid) {
