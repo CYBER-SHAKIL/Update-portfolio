@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07090f">
+  <meta name="description" content="Shakil — developer portfolio">
+  <title>Shakil | Developer Portfolio</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <div class="orb orb-a"></div><div class="orb orb-b"></div>
+  <header class="topbar wrap">
+    <a class="brand" href="#home"><span class="brand-mark">S</span> SHAKIL<span class="accent">.DEV</span></a>
+    <nav><a href="#about">About</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav>
+    <button class="btn btn-small" id="auth-open">Sign in</button>
+  </header>
+
+  <main>
+    <section class="hero wrap" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> AVAILABLE FOR PROJECTS</div>
+        <h1>Building digital<br>things with <span class="gradient-text">purpose.</span></h1>
+        <p class="lead">Hey, I'm Shakil — a developer who loves creating clean, useful experiences for the web.</p>
+        <div class="hero-actions"><a class="btn" href="#projects">Explore my work <span>↗</span></a><a class="btn btn-ghost" href="#contact">Let's talk</a></div>
+        <div class="hero-meta"><span><i class="dot"></i> Bangladesh</span><span>HTML · CSS · JavaScript</span></div>
+      </div>
+      <div class="hero-card"><div class="card-top"><span></span><span></span><span></span><label>developer.js</label></div><pre><code><span class="code-purple">const</span> developer = {
+  name: <span class="code-green">"Shakil"</span>,
+  role: <span class="code-green">"Web Developer"</span>,
+  focus: [<span class="code-green">"UI"</span>, <span class="code-green">"Web Apps"</span>],
+  mindset: <span class="code-green">"Keep building."</span>,
+  <span class="code-blue">create</span>() {
+    <span class="code-purple">return</span> <span class="code-green">"something useful"</span>;
+  }
+};</code></pre><div class="card-foot"><span class="pulse"></span> SYSTEM ONLINE <span class="tiny">v2.0</span></div></div>
+    </section>
+
+    <section class="section wrap" id="about"><div class="section-head"><span class="eyebrow">01 / ABOUT</span><h2>Curious mind.<br><span class="muted">Practical builder.</span></h2></div><div class="about-grid"><p class="body-copy">I enjoy turning ideas into fast, responsive websites with thoughtful details. This portfolio is connected to a live database, so projects and contact messages can be managed from the admin panel.</p><div class="stat-grid"><div class="stat"><strong>01</strong><span>Keep it simple</span></div><div class="stat"><strong>∞</strong><span>Keep learning</span></div><div class="stat"><strong>100%</strong><span>Curiosity</span></div></div></div></section>
+
+    <section class="section wrap" id="projects"><div class="section-head row-head"><div><span class="eyebrow">02 / SELECTED WORK</span><h2>Things I've <span class="gradient-text">built.</span></h2></div><span class="live-label"><i class="dot"></i> LIVE DATABASE</span></div><div id="project-grid" class="project-grid"><div class="empty-state">Loading projects from database…</div></div></section>
+
+    <section class="section wrap contact-section" id="contact"><div class="section-head"><span class="eyebrow">03 / GET IN TOUCH</span><h2>Have an idea?<br><span class="gradient-text">Let's make it real.</span></h2></div><div class="contact-grid"><p class="body-copy">Send a message using the form. It will arrive in the portfolio admin inbox.</p><form id="contact-form" class="panel form-grid"><label>Your name<input name="name" required maxlength="120" placeholder="Name"></label><label>Email address<input name="email" type="email" required maxlength="254" placeholder="you@example.com"></label><label class="full">Subject<input name="subject" maxlength="200" placeholder="What would you like to build?"></label><label class="full">Message<textarea name="message" required maxlength="5000" rows="5" placeholder="Tell me a little about it…"></textarea></label><div class="full form-bottom"><span id="contact-status" class="status" aria-live="polite"></span><button class="btn" type="submit">Send message ↗</button></div></form></div></section>
+  </main>
+  <footer class="footer wrap"><a class="brand" href="#home">SHAKIL<span class="accent">.DEV</span></a><span>Made with curiosity <span class="accent">✦</span></span><span>Visitors <b id="visitor-count">—</b></span></footer>
+
+  <dialog id="auth-dialog" class="dialog"><form method="dialog" class="dialog-close"><button aria-label="Close">×</button></form><div class="eyebrow">MEMBER ACCESS</div><h2 id="auth-title">Welcome back.</h2><p class="muted" id="auth-subtitle">Sign in to your account.</p><form id="auth-form" class="form-grid"><label class="full">Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label class="full">Password<input name="password" type="password" minlength="6" autocomplete="current-password" placeholder="At least 6 characters"></label><button id="auth-submit" class="btn full" type="submit">Sign in</button></form><div class="auth-links"><button id="toggle-auth" class="text-btn">Create an account</button><button id="forgot-password" class="text-btn">Forgot password?</button></div><div class="divider"><span>OR CONTINUE WITH</span></div><div class="oauth-row"><button class="btn btn-ghost" data-provider="google">Google</button><button class="btn btn-ghost" data-provider="github">GitHub</button></div><p class="status" id="auth-status" aria-live="polite"></p></dialog>
+
+  <section id="admin-panel" class="admin-panel hidden"><div class="admin-inner wrap"><div class="row-head"><div><span class="eyebrow">PRIVATE AREA</span><h2>Admin <span class="gradient-text">dashboard.</span></h2></div><button id="sign-out" class="btn btn-ghost">Sign out</button></div><div class="admin-stats"><div class="panel"><span>VISITORS</span><strong id="admin-visitors">—</strong></div><div class="panel"><span>PROJECTS</span><strong id="admin-project-count">—</strong></div><div class="panel"><span>MESSAGES</span><strong id="admin-message-count">—</strong></div></div><div class="admin-columns"><div class="panel"><h3>Manage projects</h3><form id="project-form" class="form-grid"><input type="hidden" name="id"><label class="full">Title<input name="title" required maxlength="150"></label><label class="full">Description<textarea name="description" required maxlength="1000" rows="3"></textarea></label><label class="full">Tech stack (comma separated)<input name="tech_stack" placeholder="HTML, CSS, JavaScript"></label><label class="full">Project URL<input name="project_url" type="url" placeholder="https://…"></label><label class="full checkbox"><input name="featured" type="checkbox"> Featured project</label><button class="btn full" type="submit">Save project</button><button class="btn btn-ghost full" id="cancel-edit" type="button">Clear form</button></form><div id="admin-projects" class="admin-list"></div></div><div class="panel"><h3>Contact inbox</h3><div id="admin-messages" class="admin-list">Loading messages…</div></div></div><p class="muted small">Admin access is controlled by Supabase app_metadata, not by a public signup field.</p></div></section>
+</body>
+</html>

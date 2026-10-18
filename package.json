@@ -1,0 +1,7 @@
+{
+  "name": "shakil-dev-pro-v2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {"dev": "vite --host 0.0.0.0", "build": "vite build", "preview": "vite preview"},
+  "devDependencies": {"vite": "6.4.1"}
+}
